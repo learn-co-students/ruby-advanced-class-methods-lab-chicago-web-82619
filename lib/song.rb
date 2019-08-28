@@ -7,7 +7,7 @@ class Song
   end
 
   def save
-    self.class.all << self
+    @@all << self
   end
 
   def self.create
@@ -17,20 +17,22 @@ class Song
   end
 
   def self.new_by_name(name)
-    newsong = Song.new
-    newsong.name = name
-    newsong
+    song = Song.new
+    song.name = name
+    song
   end
 
   def self.create_by_name(name)
-    new_song = Song.new
-    new_song.name = name
-    @@all << new_song
-    new_song
+    song = Song.new
+    song.name = name
+    @@all << song
+    song
   end
 
   def self.find_by_name(name)
-    @@all.find {|song| song.name == name}
+    @@all.find do |song|
+      song.name == name
+    end
   end
 
   def self.find_or_create_by_name(name)
@@ -46,7 +48,7 @@ class Song
   end
 
 def self.new_from_filename(file)
-  file = file.chomp(".mp3")
+  file = file.delete_suffix(".mp3")
   file = file.split(" - ")
   new_song = self.create_by_name(file[1])
   new_song.artist_name = file[0]
@@ -54,8 +56,8 @@ def self.new_from_filename(file)
 end
 
 def self.create_from_filename(file)
-  new_song = self.new_from_filename(file)
-  @@all << new_song
+  song = self.new_from_filename(file)
+  @@all << song
 end
 
 def self.destroy_all
